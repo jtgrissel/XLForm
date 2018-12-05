@@ -133,7 +133,10 @@ CGFloat XLFormRowInitialHeight = -2;
                 NSString *bundlePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:folderName];
                 bundle = [NSBundle bundleWithPath:bundlePath];
             } else {
-                bundle = [NSBundle bundleForClass:NSClassFromString(cellClass)];
+                // fix for XCode10
+                NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"];
+                NSString *classStringName = [NSString stringWithFormat:@"_TtC%lu%@%lu%@", (unsigned long)appName.length, appName, (unsigned long)cellClassString.length, cellClassString];
+                bundle = [NSBundle bundleForClass:NSClassFromString(classStringName)];
                 cellResource = cellClassString;
             }
             NSParameterAssert(bundle != nil);
